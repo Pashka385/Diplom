@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authorization</title>
+    <link rel="stylesheet" href="./src/css/autorazation.css">
+    <link rel="stylesheet" href="./src/css/index.css">
+</head>
+<body>
+    <div class="wrapper">
+        <h1 id="animatedTitle"></h1>
+        <div class="box">
+            <form id="authForm">
+                <input class="login" type="text" placeholder="Введите логин" required>
+                <input class="password" type="password" placeholder="Введите пароль" required>
+                <button class="Get_autorization" type="submit">Войти</button>
+            </form>
+            <div class="result"></div>
+            <div class="addNewAdmin"></div>
+            <div id="moderatorsList"></div>
+        </div>
+    </div>
+</body>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const title = "Авторизация в систему управления";
+    let index = 0;
+
+    function typeTitle() {
+        if (index < title.length) {
+            document.getElementById('animatedTitle').textContent += title.charAt(index);
+            index++;
+            setTimeout(typeTitle, 100); // Adjust typing speed here
+        }
+    }
+
+    typeTitle(); // Start typing animation
+
+    document.getElementById('authForm').addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        let login = document.querySelector('.login').value;
+        let password = document.querySelector('.password').value;
+        const addNewAdmin = document.querySelector('.addNewAdmin');
+
+        try {
+            const response = await fetch('http://localhost:3000/autorization', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ login, password })
+            });
+
+            if (!response.ok) throw new Error('Ошибка сети');
+
+            const result = await response.json();
+
+            if (result.success) {
+                localStorage.setItem('Аккаунт', JSON.stringify({ login }));
+                const ResultAcount = JSON.parse(localStorage.getItem('Аккаунт'));
+
+                if (ResultAcount.login === 'admin') {
+                    addNewAdmin.innerHTML = `
+                        <button id='newadmin'>Добавить модератора</button>
+                        <button id='OpenPanel'>Перейти в панель работы</button>
+                        <button id='OpenModer'>Просмотреть модераторов</button>
+                    `;
+
+                    document.getElementById('OpenModer').addEventListener('click', loadModerators);
+                    document.getElementById('newadmin').addEventListener('click', addModerator);
+                    document.getElementById('OpenPanel').addEventListener('click', function() {
+                        window.location.replace('./main.html');
+                    });
+
+                } else {
+                    window.location.href = './main.html'; // Перенаправление для обычных пользователей
+                }
+            } else {
+                alert('Неверный логин или пароль');
+            }
+        } catch (error) {
+            console.error('Ошибка при авторизации:', error);
+            alert('Ошибка при авторизации. Попробуйте еще раз.');
+        }
+    });
+
+    async function loadModerators() {
+        try {
+            const response = await fetch('http://localhost:3000/moderators');
+            if (!response.ok) throw new Error('Ошибка загрузки модераторов');
+
+            const moderators = await response.json();
+            const moderatorsList = document.getElementById('moderatorsList');
+            moderatorsList.innerHTML = '';
+
+            moderators.forEach(moder => {
+                const card = document.createElement('div');
+                card.classList.add('moder-card');
+                card.innerHTML = `
+                    <p>ID: ${moder.id}</p>
+                    <p>Логин: ${moder.login}</p>
+                    <p>Пароль: ${moder.password}</p>
+                    <button class='deletemoder' onclick="deleteModerator(${moder.id})">Удалить</button>
+                `;
+                moderatorsList.appendChild(card);
+            });
+        } catch (error) {
+            console.error('Ошибка при загрузке модераторов:', error);
+        }
+    }
+
+    async function deleteModerator(id) {
+        try {
+            const response = await fetch(`http://localhost:3000/moderators/${id}`, { method: 'DELETE' });
+            if (!response.ok) throw new Error('Ошибка при удалении');
+            loadModerators();
+        } catch (error) {
+            console.error('Ошибка удаления:', error);
+        }
+    }
+
+    async function addModerator() {
+        const login = prompt('Введите логин нового модератора:');
+        const password = prompt('Введите пароль нового модератора:');
+
+        if (!login || !password) {
+            alert('Логин и пароль не могут быть пустыми!');
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:3000/moderators', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ login, password })
+            });
+
+            alert('Модератор добавлен');
+            loadModerators();
+        } catch (error) {
+            console.error('Ошибка добавления модератора:', error);
+        }
+    }
+});
+</script>
+</html>

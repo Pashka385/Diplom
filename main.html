@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заявки</title>
+    <link rel="stylesheet" href="./src/css/style.css">
+</head>
+<body>
+<header id="header" class="header"></header>
+<div class="wrapper">
+    <main>
+
+    <div class="find">
+        <h1>Поиск Заявки</h1>
+        <div class="box">
+            <input id="find_input" type="text" placeholder="Введите Фамилию клиента">
+            <button id="find_btn" type="submit">Найти</button>
+            <button id="clear_btn">Отчистить</button>
+        </div>
+        <div class="result_find"></div>
+    </div>
+
+    <div class="find-by-date-range">
+        <h1>Поиск по диапазону дат</h1>
+        <div class="input__conatainer">
+            <input id="start_date_input" type="date">
+            <input id="end_date_input" type="date">
+            <button class="Search" id="date_range_find_btn" type="submit">Найти</button>
+            <button class="unSearch" id="date_range_clear_btn">Очистить</button>
+        </div>
+        <!-- <div class="button__container">
+            <button class="Search" id="date_range_find_btn" type="submit">Найти</button>
+            <button class="unSearch" id="date_range_clear_btn">Очистить</button>
+        </div> -->
+        <div class="result_find2"></div>
+    </div>
+
+    
+        <div class="find_employee">
+            <h1>Поиск заявок сотрудника по диапазону дат</h1>
+            <div class="employee__container">
+                <!-- <form action=""> -->
+                    <input type="text" id="secondname_employee" placeholder="Введите фамилию сотрудника" required>
+                <input id="start_date_input_employee" type="date" required>
+                <input id="end_date_input_employee" type="date" required>
+                <!-- </form> -->
+                <!-- <div class="find_employee_btn"> -->
+                    <button class="search" id="search_employee" type="submit">Найти</button>
+                <button class="unsearch" id="unsearch_employee">Очистить</button>
+                <!-- </div> -->
+            </div>
+            <div class="result_find_employee"></div>
+        </div>
+        <br>
+        <h1 class="promocode_title">Управление промокодами</h1>
+        <div class="promocode">
+    
+            <div class="promocode_box1">
+                <h2>Добавить новый промокод</h2>
+                <input type="text" id="newPromoCode" placeholder="Промокод" required>
+                <input type="text" id="newFamily" placeholder="Фамилия" required>
+                <button id="addPromoCodeBtn">Добавить промокод</button>
+            </div>
+        
+            <div class="promocode_box2">
+                <h2>Активировать промокод</h2>
+                <input type="text" id="activatePromoCode" placeholder="Промокод для активации" required>
+                <button id="activatePromoCodeBtn">Активировать промокод</button>
+            </div>
+    
+            <div class="promocode_box3">
+                <h2>Поиск промокодов по фамилии</h2>
+                <input type="text" id="searchFamily" placeholder="Введите фамилию" required>
+                <button id="searchPromoCodeBtn">Поиск промокодов</button>
+                <div id="searchResults"></div>
+                <p id="responseMessage"></p>
+            </div>
+        </div>
+        <br>
+    
+    <button id="addRequestBtn">Добавить заявку</button><br>
+        <div id="request-container" class="request-container">
+            <div id="openreq" class="section" data-status="Открыто">
+                <h2>Открытые заявки</h2>
+            </div>
+            <div id="closereq" class="section" data-status="Закрыто">
+                <h2>Закрытые заявки</h2>
+            </div>
+            <div id="procesreq" class="section" data-status="В процессе">
+                <h2>Заявки в процессе</h2>
+            </div>
+        </div>
+        <button class="add_emloyee">Добавить сотрудника</button>
+        <div class="employees"></div>
+    </main>
+</div>
+<button class="ComponyRequest">Скачать отчет органиазции</button>
+<!-- Modal for editing request -->
+<div id="edit-modal" class="modal">
+    <div class="modal-content">
+        <h3>Редактировать заявку</h3>
+        <form id="edit-form">
+            <input placeholder="Фамиляи клиента" type="text" id="surname" name="surname">
+            <input placeholder="Описание заявки" type="text" id="opisanie" name="opisanie">
+            <input placeholder="Коментарий к заявке" type="text" id="comment" name="comment"> <!-- Fixed name -->
+            <input placeholder="Стоимость заявки в Руб" type="text" id="cost" name="cost"> <!-- Fixed name -->
+        </form>
+        <div class="modal_edit_btn">
+            <button id="save-edit-btn" type="submit">Сохранить</button>
+            <button id="close-modal">Закрыть</button>
+        </div>
+    </div>
+</div> 
+
+
+<div id="addRequestModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Добавить заявку</h2>
+      <form id="addRequestForm">
+        <input type="text" id="surname" class="surname" name="surname" placeholder="Введите фамилию и имя" required>
+  
+        <textarea id="comments" name="comments" placeholder="Введите комментарий"></textarea><br>
+  
+        <select id="employeeSelect" name="employee_id"></select><br>
+  
+        <input type="datetime" id="personCome" class="personCome" name="person_come" placeholder="Дата талона клиента" required>
+
+        <input type="text" class="personTele" id="personTele" name="personTele" placeholder="Номер телефона без +" required>
+  
+        <textarea id="opisanie" name="opisanie" class="opisanie" placeholder="Введите описание"></textarea>
+
+        <input type="numbers" id="cost" class="cost" name="cost" placeholder="Введите стоимость" required>
+  
+        <button type="submit">Сохранить</button>
+      </form>
+    </div>
+</div>
+
+<div id="details_modal_find" class="modal">
+    <div class="modal-content_find">
+        <div id="modal_content_find">
+        </div>
+        <span class="close" id="modal_close">&times;</span>
+    </div>
+</div>
+  
+<script src="./src/js/header.js"></script>
+<script src="./src/js/index.js"></script>
+<script src="./src/js/employees.js"></script>
+<script src="./src/js/find.js"></script>
+<script src="./src/js/company.js"></script>
+<script src="./src/js/promo.js"></script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background: linear-gradient(to right, #78d6f5, #68bcd7);
+}
+#searchInput{
+    width: 210px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+th {
+    background-color: rgb(61, 203, 247);
+    color: #fff;
+}
+#downloadReport{
+    background-color: #4CAF50;
+    color: #fff;
+    border: solid 0px transparent;
+}
+.form-container {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.form-container input, button {
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+.form-container button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+.form-container button:hover {
+    background-color: #45a049;
+}
+button {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+.delete-btn {
+    background: #d9534f;
+    color: white;
+    border: none;
+}
+.edit-btn {
+    background: #f0ad4e;
+    color: white;
+    border: none;
+}
+h1{
+    color: #fff;
+    text-align: center;
+}
+.get_main{
+width: 120px;
+position: fixed;
+left: 15px;
+top: 15px;
+background-color: #5ebcf3;
+color: #fff;
+cursor: pointer;
+border: solid 0px transparent;
+}
+.get_main:hover{
+background-color: rgb(61, 203, 247);
+}
+.get_main a{
+list-style-type: none;
+text-decoration: none;
+color: #fff;
+}

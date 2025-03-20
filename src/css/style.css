@@ -1,0 +1,678 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+.request-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 20px;
+    min-height: 300px;
+}
+.section {
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    min-height: 200px;
+    background: #f9f9f9;
+    transition: background 0.3s;
+}
+.section.dragover {
+    background: #e0ffe0;
+}
+.request-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    background: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: grab;
+    margin-bottom: 8px;
+}
+.request-card h3 {
+    margin: 0 0 8px;
+}
+.request-card p {
+display: block;   /* Убедитесь, что текст отображается как блок */
+word-wrap: break-word;   /* Для длинных строк текста */
+margin: 5px 0;    /* Для лучшей читаемости */
+}
+.section{
+min-height: 300px;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 500px;
+    width: 100%;
+}
+
+.modal button {
+    margin-top: 20px;
+}
+.header {
+    background-color: rgb(219, 227, 227);
+    min-height: 130px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header__container {
+    position: absolute;
+    width: 95%;
+    height: 90%;
+    background-color: rgb(61, 203, 247);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 10px;
+}
+
+.header__container ul {
+    display: flex;
+    gap: 40px;
+}
+
+.header__container ul li {
+    list-style-type: none;
+}
+
+.header__container ul li a {
+    list-style-type: none;
+    text-decoration: none;
+    color: #fff;
+    position: relative;
+    padding-bottom: 5px;
+}
+.header__container ul li a::before{
+    content: '';
+    width: 0%;
+    height: 1px;
+    background-color: white;
+    position: absolute;
+    bottom: 2px;
+    left: 0;
+    transition: all ease-in-out 0.2s;
+}
+.header__container ul li a:hover:before{
+    transition: all ease-in-out 0.2s;
+    width: 100%;
+}
+header img{
+    width: 80px;
+}
+.find{
+    background-color: rgb(61, 203, 247);
+    width: 100%;
+    min-height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: #fff;
+    gap: 20px;
+}
+#find_input{
+    padding: 5px 10px;
+    border: solid 0px transparent;
+    border-radius: 5px;
+}
+.find .box{
+    display: flex;
+    gap: 10px;
+}
+#find_btn{
+    width: 80px;
+    height: 30px;
+    border: solid 0px transparent;
+    border-radius: 5px;
+    background-color: rgb(73, 236, 73);
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all ease-in-out 0.2s;
+}
+#find_btn:hover{
+    transform: scale(0.95);
+    transition: all ease-in-out 0.2s;
+}
+#clear_btn{
+    width: 90px;
+    height: 30px;
+    border: solid 0px transparent;
+    border-radius: 5px;
+    background-color: rgb(247, 73, 73);
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all ease-in-out 0.2s;
+}
+#clear_btn:hover{
+    transform: scale(0.95);
+    transition: all ease-in-out 0.2s;
+}
+.result_find{
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+.result_find div{
+    padding: 10px;
+    background-color: rgb(45, 177, 220);
+    border-radius: 10px;
+    border: dashed 2px white;
+    position: relative;
+    transition: all ease-in-out 0.2s;
+}
+.result_find div:hover{
+    transform: scale(0.95);
+    transition: all ease-in-out 0.2s;
+}
+.result_find div button{
+    transform: translateY(5px);
+    width: 110px;
+    height: 25px;
+    border: solid 0px transparent;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.delete-btn{
+    background-color: red;
+}
+.result_find div h1{
+    padding-bottom: 3px;
+}
+.edit-btn{
+    background-color: orange;
+}
+.modal-content{
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(45, 176, 220, 0.637);
+}
+.modal-content form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.modal-content form input{
+    padding: 3px 5px;
+    height: 25px;
+    border-radius: 3px;
+    border: solid 0px transparent;
+}
+.modal-content h3{
+    text-align: center;
+    padding-bottom: 10px;
+    color: #fff;
+}
+#save-edit-btn{
+    width: 130px;
+    height: 30px;
+    border: solid 0px transparent;
+    border-radius: 5px;
+    background-color: rgb(73, 236, 73);
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0px 5px;
+}
+.modal_edit_btn{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    
+}
+.modal_edit_btn #close-modal{
+    width: 130px;
+    height: 30px;
+    border-radius: 5px;
+    border: solid 0px transparent;
+    background-color: rgb(247, 73, 73);
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0px 5px;
+}
+.find-by-date-range{
+    background-color: rgb(61, 203, 247);
+    width: 100%;
+    min-height: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+.find-by-date-range h1{
+    color: #fff;
+    text-align: center;
+}
+.find-by-date-range input{
+    padding: 5px 10px;
+    border: solid 0px transparent;
+    border-radius: 5px;
+}
+.input__conatainer{
+    display: flex;
+    gap: 10px;
+}
+.Search{
+    width: 80px;
+    height: 30px;
+    border: solid 0px transparent;
+    border-radius: 5px;
+    background-color: rgb(73, 236, 73);
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all ease-in-out 0.2s;
+}
+.unSearch{
+    width: 90px;
+    height: 30px;
+    border: solid 0px transparent;
+    border-radius: 5px;
+    background-color: rgb(247, 73, 73);
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all ease-in-out 0.2s;
+}
+.result_find2{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    padding: 10px;
+}
+.result_find2 div{
+    padding: 10px;
+    background-color: rgb(45, 177, 220);
+    border-radius: 10px;
+    border: dashed 2px white;
+    color: #fff;
+    transition: all ease-in-out 0.2s;
+}
+.result_find2 div:hover{
+    transform: scale(0.95);
+    transition: all ease-in-out 0.2s;
+}
+.result_find2 div button{
+    transform: translateY(5px);
+    border: solid 0px transparent;
+    cursor: pointer;
+}
+.details-btn{
+    padding: 2px 5px;
+    border-radius: 3px;
+    background-color: rgb(73, 236, 73);
+    color: #fff;
+}
+.delete-btn{
+    padding: 2px 5px;
+    background-color: rgb(247, 73, 73);
+    border-radius: 3px;
+    color: #fff;
+}
+.modal-content_find{
+    display: flex;
+    justify-content: center;
+    width: 450px;
+    min-height: 100px;
+    background-color: green;
+    background-color: transparent;
+    position: relative;
+}
+.wrapper{
+    padding-top: 15px;
+    background-color: rgb(61, 203, 247);
+}
+#modal_content_find{
+    background-color: rgba(45, 176, 220, 0.637);
+    width: 450px;
+    min-height: 100px;
+    padding: 20px;
+    border-radius: 10px;
+    color: #fff;
+}
+#details_modal_find.active{
+    display: flex;
+    justify-content: center;
+align-items: center;
+background-color: transparent;
+}
+#modal_close{
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    font-size: 20px;
+    color: #fff;
+    cursor: pointer;
+}
+.find_employee{
+    background-color: rgb(61, 203, 247);
+    width: 100%;
+    min-height: 50px;
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+    gap: 20px;
+}
+.find_employee_btn{
+    padding-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+.find_employee h1{
+    text-align: center;
+    color: #fff;
+}
+.employee__container input{
+    padding: 5px 10px;
+    border: solid 0px transparent;
+    border-radius: 5px;
+}
+.employee__container form{
+    display: flex;
+    gap: 10px;
+}
+.find_employee_btn{
+    display: flex;
+    gap: 5px;
+}
+.search{
+    width: 80px;
+    height: 30px;
+    border: solid 0px transparent;
+    border-radius: 5px;
+    background-color: rgb(73, 236, 73);
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all ease-in-out 0.2s;
+}
+.unsearch{
+    width: 90px;
+    height: 30px;
+    border: solid 0px transparent;
+    border-radius: 5px;
+    background-color: rgb(247, 73, 73);
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all ease-in-out 0.2s;
+}
+.result_find_employee{
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    padding: 10px;
+}
+.result_find_employee div{
+    padding: 10px;
+    background-color: rgb(45, 177, 220);
+    border-radius: 10px;
+    border: dashed 2px white;
+    color: #fff;
+    transition: all ease-in-out 0.2s;
+}
+.result_find_employee div:hover{
+    transform: scale(0.95);
+    transition: all ease-in-out 0.2s;
+}
+.result_find_employee div button{
+    transform: translateY(5px);
+    border: solid 0px transparent;
+    cursor: pointer;
+}
+.details-btn{
+    padding: 2px 5px;
+    border-radius: 3px;
+    background-color: rgb(73, 236, 73);
+    color: #fff;
+}
+.delete_request_btn{
+    padding: 2px 5px;
+    background-color: rgb(247, 73, 73);
+    border-radius: 3px;
+    color: #fff;
+}
+.request-container{
+    display: flex;
+}
+.request-container h2{
+    color: #fff;
+    padding-bottom: 10px;
+    text-align: center;
+}
+.section{
+    background-color: rgb(45, 177, 220);
+}
+.employees{
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.promocode{
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+.promocode_box1{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    gap: 10px;
+    color: #fff;
+}
+.promocode_box2{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    gap: 10px;
+    color: #fff;
+}
+.promocode_box3{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    gap: 10px;
+    color: #fff;
+}
+.promocode_title{
+    text-align: center;
+    color: #fff;
+}
+.promocode input{
+    width: 300px;
+    padding: 2px 3px;
+    border: solid 0px transparent;
+    border-radius: 3px;
+}
+.promocode button{
+    width: 180px;
+    border: solid 0px transparent;
+    padding:6px 8px;
+    border-radius: 3px;
+    background-color: rgb(73, 236, 73);
+    color: #fff;
+    transition: all ease-in-out 0.2s;
+    cursor: pointer;
+}
+.promocode button:hover{
+    transform: scale(0.95);
+    transition: all ease-in-out 0.2s;
+}
+#addRequestBtn{
+    position: fixed;
+    left: 15px;
+    top: 15px;
+    padding: 6px 8px;
+    border: solid 0px transparent;
+    color: #fff;
+    background-color: rgb(73, 236, 73);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all ease-in-out 0.2s;
+}
+.ComponyRequest{
+    position: fixed;
+    right: 15px;
+    top: 15px;
+    padding: 6px 8px;
+    border: solid 0px transparent;
+    color: #fff;
+    background-color: rgb(73, 236, 73);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all ease-in-out 0.2s;
+}
+.ComponyRequest:hover{
+    transform: scale(0.95);
+    transition: all ease-in-out 0.2s;
+}
+#addRequestBtn:hover{
+    transform: scale(0.95);
+    transition: all ease-in-out 0.2s;
+}
+.request-card .delete-btn{
+    padding: 2px 7px;
+    border: solid 0px transparent;
+    cursor: pointer;
+}
+.request-card .edit-btn{
+    padding: 2px 7px;
+    border: solid 0px transparent;
+    color: #fff;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.request-card .send-notification-btn{
+    padding: 2px 7px;
+    border: solid 0px transparent;
+    color: #fff;
+    background-color: rgb(73, 236, 73);
+    border-radius: 3px;
+    cursor: pointer;
+}
+.add_emloyee{
+    padding: 5px 8px;
+    border: solid 0px transparent;
+    color: #fff;
+    background-color: rgb(73, 236, 73);
+    border-radius: 3px;
+    cursor: pointer;
+    margin-left: 15px;
+}
+.employees{
+    padding: 10px;
+}
+.employees .request-card{
+    border: dashed 5px rgb(45, 177, 220);
+    transition: all ease-in-out 0.2s;
+    cursor: pointer;
+}
+.employees .request-card:hover{
+    transform: scale(1.03);
+    transition: all ease-in-out 0.2s;
+}
+.employees div div button{
+    padding: 2px 5px;
+    color: #fff;
+    border: solid 0px transparent;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.employees div div .delete-employee{
+    background-color: rgb(247, 73, 73);
+}
+.employees div div .download-report{
+    background-color: rgb(73, 236, 73);
+}
+.modal-content{
+    width: 300px;
+}
+.modal-content form{
+    display: flex;
+    flex-direction: column;
+}
+#addRequestModal{
+    justify-content: center;
+    align-items: center;
+}
+.modal-content h2{
+    text-align: center;
+    color: #fff;
+    padding-bottom: 20px;
+}
+.modal-content form textarea{
+    width: 191px;
+    height: 35px;
+}
+.modal-content .close{
+    color: #fff;
+    font-size: 30px;
+    cursor: pointer;
+}
+.modal-content form select{
+    width: 191px;
+    background-color: #fff;
+    border: solid 0px transparent;
+    border-radius: 5px;
+    height: 30px;
+}
+.modal-content form button{
+    padding: 3px 12px;
+    border: solid 0px transparent;
+    color: #fff;
+    background-color: rgb(73, 236, 73);
+    border-radius: 3px;
+    cursor: pointer;
+}

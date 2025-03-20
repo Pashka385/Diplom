@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог услуг</title>
+    <link rel="stylesheet" href="./src/css/uslug.css">
+</head>
+<body>
+    <button class="get_main"><a href="./main.html">Вернуться</a></button>
+    <h1>Каталог услуг</h1>
+
+    <div class="form-container">
+        <h2>Добавить новую услугу</h2>
+        <input type="text" id="serviceName" placeholder="Название услуги" required>
+        <input type="text" id="serviceDescription" placeholder="Описание" required>
+        <input type="number" id="servicePrice" placeholder="Цена" required>
+        <input type="time" id="serviceDuration" required>
+        <button onclick="addService()">Добавить услугу</button>
+    </div>
+
+    <div id="servicesContainer">
+        <!-- Услуги будут добавлены здесь с помощью JavaScript -->
+    </div>
+
+    <script>
+        async function fetchServices() {
+            try {
+                const response = await fetch('http://localhost:3000/ServicesCatalog'); // Замените на ваш URL
+                const services = await response.json();
+                const servicesContainer = document.getElementById('servicesContainer');
+                servicesContainer.innerHTML = ''; // Очистить контейнер перед добавлением
+
+                services.forEach(service => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <h3>${service.service_name}</h3>
+                        <p>${service.description}</p>
+                        <p>Цена: ${service.price} руб.</p>
+                        <p>Время: ${service.duration}</p>
+                        <button onclick="deleteService(${service.id})">Удалить</button>
+                    `;
+                    servicesContainer.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Ошибка при получении услуг:', error);
+            }
+        }
+
+        async function addService() {
+            const name = document.getElementById('serviceName').value;
+            const description = document.getElementById('serviceDescription').value;
+            const price = document.getElementById('servicePrice').value;
+            const duration = document.getElementById('serviceDuration').value;
+
+            const newService = {
+                service_name: name,
+                description: description,
+                price: parseFloat(price),
+                duration: duration
+            };
+
+            try {
+                const response = await fetch('http://localhost:3000/ServicesCatalog', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(newService)
+                });
+
+                if (response.ok) {
+                    fetchServices(); // Обновить список услуг
+                    // Очистить поля ввода
+                    document.getElementById('serviceName').value = '';
+                    document.getElementById('serviceDescription').value = '';
+                    document.getElementById('servicePrice').value = '';
+                    document.getElementById('serviceDuration').value = '';
+                } else {
+                    console.error('Ошибка при добавлении услуги:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Ошибка при добавлении услуги:', error);
+            }
+        }
+
+        async function deleteService(id) {
+            try {
+                const response = await fetch(`http://localhost:3000/ServicesCatalog/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    fetchServices(); // Обновить список услуг
+                } else {
+                    console.error('Ошибка при удалении услуги:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Ошибка при удалении услуги:', error);
+            }
+        }
+
+        // Загружаем услуги при загрузке страницы
+        window.onload = fetchServices;
+    </script>
+</body>
+</html>

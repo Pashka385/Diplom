@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>История изменений</title>
+    <link rel="stylesheet" href="./src/css/history.css">
+</head>
+<body>
+    <button class="get_main"><a href="./main.html">Вернуться</a></button>
+    <h1>История изменений</h1>
+    <table id="changeLogTable">
+        <thead>
+            <tr>
+                <th>Изменение</th>
+                <th>Дата изменения</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Данные будут добавлены здесь с помощью JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        async function fetchChangeLog() {
+            try {
+                const response = await fetch('http://localhost:3000/change-log'); // Замените на ваш URL
+                const changeLog = await response.json();
+
+                const tableBody = document.getElementById('changeLogTable').getElementsByTagName('tbody')[0];
+
+                changeLog.forEach(change => {
+                    const row = tableBody.insertRow();
+
+                    // Форматируем дату
+                    const date = new Date(change.changed_at);
+                    const formattedDate = `${String(date.getDate()).padStart(2, '0')}.${String(date.getMonth() + 1).padStart(2, '0')}.${date.getFullYear()}`;
+
+                    // Создаем текст изменения
+                    let changeText = '';
+                    if (change.operation_type === 'INSERT') {
+                        changeText = `Добавлена новая запись в таблицу ${change.table_name} с ID ${change.new_data}`;
+                    } else if (change.operation_type === 'UPDATE') {
+                        changeText = `Статус заявки номер ${change.old_data} изменен`;
+                    } else if (change.operation_type === 'DELETE') {
+                        changeText = `Запись с ID ${change.old_data} удалена из таблицы ${change.table_name}`;
+                    }
+
+                    // Добавляем ячейки в строку
+                    const changeCell = row.insertCell(0);
+                    const dateCell = row.insertCell(1);
+                    changeCell.textContent = changeText;
+                    dateCell.textContent = formattedDate;
+                });
+            } catch (error) {
+                console.error('Ошибка при получении истории изменений:', error);
+            }
+        }
+
+        // Загружаем историю изменений при загрузке страницы
+        window.onload = fetchChangeLog;
+    </script>
+</body>
+</html>

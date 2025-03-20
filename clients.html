@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Клиенты</title>
+    <link rel="stylesheet" href="./src/css/clients.css">
+</head>
+<body>
+    <button class="get_main"><a href="./main.html">Вернуться</a></button>
+    <h1>Список клиентов</h1>
+
+    <div class="form-container">
+        <h2>Поиск по фамилии</h2>
+        <input type="text" id="searchInput" placeholder="Введите фамилию для поиска">
+    </div>
+
+    <table id="clientsTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Фамилия</th>
+                <th>Телефон</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Данные будут добавлены сюда с помощью JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        let allClients = []; // Хранит всех клиентов
+
+        async function fetchClients() {
+            try {
+                const response = await fetch('http://localhost:3000/clients');
+                if (!response.ok) {
+                    throw new Error('Сеть не отвечает');
+                }
+                allClients = await response.json(); // Сохраняем всех клиентов
+                renderTable(allClients); // Отображаем всех клиентов
+            } catch (error) {
+                console.error('Ошибка при получении данных:', error);
+            }
+        }
+
+        function renderTable(clients) {
+            const tableBody = document.getElementById('clientsTable').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = ''; // Очистить таблицу перед добавлением новых данных
+
+            clients.forEach(client => {
+                const row = tableBody.insertRow();
+                row.insertCell(0).textContent = client.id;
+                row.insertCell(1).textContent = client.Surname;
+                row.insertCell(2).textContent = client.telephone;
+            });
+        }
+
+        document.getElementById('searchInput').addEventListener('input', (event) => {
+            const searchTerm = event.target.value.toLowerCase();
+            const filteredClients = allClients.filter(client => 
+                client.Surname.toLowerCase().includes(searchTerm)
+            );
+            renderTable(filteredClients); // Отображаем отфильтрованных клиентов
+        });
+
+        // Инициализация таблицы при загрузке страницы
+        window.onload = fetchClients;
+    </script>
+</body>
+</html>

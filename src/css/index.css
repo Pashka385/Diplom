@@ -1,0 +1,120 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.wrapper {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(35, 150, 232);
+    flex-direction: column;
+    gap: 40px;
+}
+.wrapper h1 {
+    color: #fff;
+    font-size: 50px;
+    white-space: nowrap; /* Prevent line breaks */
+    overflow: hidden; /* Hide overflow */
+    border-right: 0.15em solid #fff; /* Cursor effect */
+    animation: blink 0.75s step-end infinite; /* Blinking cursor */
+}
+@keyframes blink {
+    50% {
+        border-color: transparent;
+    }
+}
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    justify-content: center;
+    align-items: center;
+}
+form input{
+    background-color: #fff;
+    width: 250px;
+    height: 35px;
+    text-align: center;
+    border-radius: 10px;
+    border: solid 0px transparent;
+}
+input::hover {
+transition: all ease-in-out 0.2s;
+transform: scale(0.9);
+}
+.Get_autorization{
+height: 35px;
+width: 120px;
+border: 0px solid transparent;
+border-radius: 10px;
+background-color: rgb(36, 231, 36);
+color: #fff;
+font-weight: bold;
+transition: all ease-in-out 0.2s;
+cursor: pointer;
+}
+.box{
+display: flex;
+flex-direction: column;
+}
+.addNewAdmin button{
+height: 35px;
+width: 170px;
+border: 0px solid transparent;
+border-radius: 10px;
+background-color: rgba(16, 205, 16, 0.969);
+color: #fff;
+transition: all ease-in-out 0.2s;
+cursor: pointer;
+padding: 2px 2px;
+}
+.addNewAdmin button:hover{
+transform: scale(0.95);
+transition: all ease-in-out 0.2s;
+}
+.Get_autorization:hover{
+transform: scale(0.95);
+transition: all ease-in-out 0.2s;
+}
+.addNewAdmin{
+padding-top: 30px;
+display: flex;
+gap: 15px;
+}
+#moderatorsList{
+margin-top: 30px;
+padding: 15px;
+display: flex;
+flex-wrap: wrap;
+gap: 20px;
+}
+#moderatorsList div{
+padding: 10px;
+border: solid 1px #fff;
+width: 150px;
+height: 120px;
+border-radius: 10px;
+color: #fff;
+position: relative;
+background-color: #2ba0f3;
+transition: all ease-in-out 0.2s;
+}
+
+#moderatorsList div:hover{
+transition: all ease-in-out 0.2s;
+transform: scale(0.95);
+}
+.deletemoder{
+position: absolute;
+width: 100px;
+height: 25px;
+background-color: red;
+border: solid 0px transparent;
+color: #fff;
+border-radius: 5px;
+margin-top: 10px;
+cursor: pointer;
+}

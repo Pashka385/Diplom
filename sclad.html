@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление Складом</title>
+    <link rel="stylesheet" href="./src/css/sclad.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+</head>
+<body>
+    <button class="get_main"><a href="./main.html">Вернуться</a></button>
+    <h1>Управление Складом</h1>
+
+    <div class="form-container">
+        <h2>Добавить новую заявку</h2>
+        <form id="addRequestForm">
+            <input type="text" name="name" placeholder="Название" required>
+            <input type="number" name="product_count" placeholder="Количество продуктов" required>
+            <input type="text" name="sclad_type" placeholder="Тип склада" required>
+            <input type="text" name="product_opisanie" placeholder="Описание продукта" required>
+            <button type="submit">Добавить заявку</button>
+        </form>
+    </div>
+
+    <div class="form-container">
+        <h2>Поиск по названию</h2>
+        <input type="text" id="searchInput" placeholder="Введите название для поиска">
+    </div>
+
+    <button id="downloadReport">Скачать отчет</button>
+
+    <table id="requestsTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Название</th>
+                <th>Количество продуктов</th>
+                <th>Тип склада</th>
+                <th>Описание продукта</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Данные будут добавлены сюда с помощью JavaScript -->
+        </tbody>
+    </table>
+
+    <script>
+        let allRequests = []; // Хранит все заявки
+
+        async function fetchRequests() {
+            try {
+                const response = await fetch('http://localhost:3000/requestsSclad');
+                if (!response.ok) {
+                    throw new Error('Сеть не отвечает');
+                }
+                allRequests = await response.json(); // Сохраняем все заявки
+                renderTable(allRequests); // Отображаем все заявки
+            } catch (error) {
+                console.error('Ошибка при получении данных:', error);
+            }
+        }
+
+        function renderTable(requests) {
+            const tableBody = document.getElementById('requestsTable').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = ''; // Очистить таблицу перед добавлением новых данных
+
+            requests.forEach(request => {
+                const row = tableBody.insertRow();
+                row.insertCell(0).textContent = request.id;
+                row.insertCell(1).textContent = request.name;
+                row.insertCell(2).textContent = request.product_count;
+                row.insertCell(3).textContent = request.sclad_type;
+                row.insertCell(4).textContent = request.product_opisanie;
+
+                // Кнопки редактирования и удаления
+                const actionsCell = row.insertCell(5);
+                const editButton = document.createElement('button');
+                editButton.classList.add('edit-btn')
+                editButton.textContent = 'Редактировать';
+                editButton.onclick = () => editRequest(request);
+                actionsCell.appendChild(editButton);
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Удалить';
+                deleteButton.classList.add('delete-btn')
+                deleteButton.onclick = () => deleteRequest(request.id);
+                actionsCell.appendChild(deleteButton);
+            });
+        }
+
+        async function addRequest(data) {
+            const response = await fetch('http://localhost:3000/requestsSclad', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+            if (response.ok) {
+ fetchRequests(); // Обновить таблицу
+            }
+        }
+
+        async function editRequest(request) {
+            const newName = prompt('Введите новое название:', request.name);
+            const newProductCount = prompt('Введите новое количество продуктов:', request.product_count);
+            const newScladType = prompt('Введите новый тип склада:', request.sclad_type);
+            const newProductOpisanie = prompt('Введите новое описание продукта:', request.product_opisanie);
+
+            if (newName && newProductCount && newScladType && newProductOpisanie) {
+                await fetch(`http://localhost:3000/requestsSclad/${request.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: newName,
+                        product_count: newProductCount,
+                        sclad_type: newScladType,
+                        product_opisanie: newProductOpisanie
+                    }),
+                });
+                fetchRequests(); // Обновить таблицу
+            }
+        }
+
+        async function deleteRequest(id) {
+            if (confirm('Вы уверены, что хотите удалить эту заявку?')) {
+                await fetch(`http://localhost:3000/requestsSclad/${id}`, {
+                    method: 'DELETE',
+                });
+                fetchRequests(); // Обновить таблицу
+            }
+        }
+
+        document.getElementById('addRequestForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData.entries());
+            addRequest(data);
+            event.target.reset(); // Сбросить форму после добавления
+        });
+
+        document.getElementById('searchInput').addEventListener('input', (event) => {
+            const searchTerm = event.target.value.toLowerCase();
+            const filteredRequests = allRequests.filter(request => 
+                request.name.toLowerCase().includes(searchTerm)
+            );
+            renderTable(filteredRequests); // Отображаем отфильтрованные заявки
+        });
+
+        document.getElementById('downloadReport').addEventListener('click', () => {
+            const worksheet = XLSX.utils.json_to_sheet(allRequests);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Заявки');
+            XLSX.writeFile(workbook, 'отчет.xlsx');
+        });
+
+        // Инициализация таблицы при загрузке страницы
+        window.onload = fetchRequests;
+    </script>
+</body>
+</html>

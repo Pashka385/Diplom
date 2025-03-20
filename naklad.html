@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Составление Накладной</title>
+    <link rel="stylesheet" href="./src/css/naklad.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+</head>
+<body>
+    <button class="get_main"><a href="./main.html">Вернуться</a></button>
+    <div class="container">
+        <h1>Составление Накладной</h1>
+        <div class="form-container">
+            <h2>Добавить товар</h2>
+            <form id="addItemForm">
+                <input type="text" name="itemName" placeholder="Название товара" required>
+                <input type="number" name="itemQuantity" placeholder="Количество" required>
+                <input type="number" name="itemPrice" placeholder="Цена" required>
+                <button type="submit">Добавить товар</button>
+            </form>
+        </div>
+        <table id="invoiceTable">
+            <thead>
+                <tr>
+                    <th>Название товара</th>
+                    <th>Количество</th>
+                    <th>Цена</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <button id="generateInvoice">Оформить накладную</button>
+    </div>
+
+    <script>
+        const invoiceItems = JSON.parse(localStorage.getItem('invoiceItems')) || [];
+        document.getElementById('addItemForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const item = {
+                name: formData.get('itemName'),
+                quantity: parseInt(formData.get('itemQuantity')),
+                price: parseFloat(formData.get('itemPrice')),
+            };
+            invoiceItems.push(item);
+            saveToLocalStorage();
+            renderTable();
+            event.target.reset();
+        });
+
+        function renderTable() {
+            const tableBody = document.getElementById('invoiceTable').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = '';
+            invoiceItems.forEach((item, index) => {
+                const row = tableBody.insertRow();
+                row.insertCell(0).textContent = item.name;
+                row.insertCell(1).textContent = item.quantity;
+                row.insertCell(2).textContent = item.price.toFixed(2);
+                const actionsCell = row.insertCell(3);
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Удалить';
+                deleteButton.onclick = () => {
+                    invoiceItems.splice(index, 1);
+                    saveToLocalStorage();
+                    renderTable();
+                };
+                actionsCell.appendChild(deleteButton);
+            });
+        }
+
+        function saveToLocalStorage() {
+            localStorage.setItem('invoiceItems', JSON.stringify(invoiceItems));
+        }
+
+        document.getElementById('generateInvoice').addEventListener('click', () => {
+            const worksheet = XLSX.utils.json_to_sheet(invoiceItems.map(item => ({
+                'Название товара': item.name,
+                'Количество': item.quantity,
+                'Цена': item.price.toFixed(2),
+            })));
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Накладная');
+            XLSX.writeFile(workbook, 'накладная.xlsx');
+        });
+        renderTable();
+    </script>
+</body>
+</html>
